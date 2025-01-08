@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private PasswordEncoder passwordEncoder;
 
+
     @Autowired
     @Lazy
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -61,11 +62,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return user;
         } else {
             for (Role role : roles) {
-                user.setRoles((Set<Role>) role);
+                user.setRoles(Set.of(role));
             }
         }
         return user;
     }
+
 
     @Override
     public User getOne(long id) {
