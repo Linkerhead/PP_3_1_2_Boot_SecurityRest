@@ -13,12 +13,16 @@
     <tr>
         <th scope="col">ID</th>
         <th scope="col">Username</th>
+        <th scope="col">email</th>
+        <th scope="col">age</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="user : ${user}">
         <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.age}"></td>
     </tr>
     </tbody>
 </table>

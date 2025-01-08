@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     @Lazy
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -59,14 +59,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public User createUser(User user, Set<Role> roles) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Set<Role> roleSet = new HashSet<>();
-        for (Role role : roles) {
-            Role newRole = role;
-            if (newRole != null) {
-                roleSet.add(newRole);
+        if (roles != null && !roles.isEmpty()) {
+            return user;
+        } else {
+            for (Role role : roles) {
+                user.setRoles((Set<Role>) role);
             }
         }
-        user.setRoles(roleSet);
         return user;
     }
 

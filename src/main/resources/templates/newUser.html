@@ -10,13 +10,23 @@
 
 <form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
     <div>
-        <label for="username">Enter name: </label>
+        <label for="username">Enter username: </label>
         <input type="text" th:field="*{username}" id="username">
     </div>
     <br>
     <div>
         <label for="password">Enter password: </label>
         <input type="text" th:field="*{password}" id="password">
+    </div>
+    <br>
+    <div>
+        <label for="email">Enter email: </label>
+        <input type="text" th:field="*{email}" id="email">
+    </div>
+    <br>
+    <div>
+        <label for="age">Enter age: </label>
+        <input type="text" th:field="*{age}" id="age">
     </div>
     <br>
     <div class="form-group">

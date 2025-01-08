@@ -12,6 +12,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,6 +21,11 @@ public class User implements UserDetails {
 
     private String password;
 
+    private String email;
+
+    private int age;
+
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
@@ -27,12 +33,33 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+
+
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(String username, String email, int age, String password, Set<Role> roles) {
         this.username = username;
+        this.email = email;
+        this.age = age;
         this.password = password;
+        this.roles = roles;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Long getId() {
