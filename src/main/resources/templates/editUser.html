@@ -28,6 +28,13 @@
         <input type="text" th:field="*{age}" id="age">
     </div>
     <br>
+    <div class="form-group">
+        <label for="roles">Role</label>
+        <select name="role" class="form-control form-control-sm" multiple id="roles" style="height: 40px;">
+            <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+        </select>
+    </div>
+    <br>
     <input type="submit" value="Update"/>
     <br> <br>
     <a href="/logout" class="button">Logout</a>

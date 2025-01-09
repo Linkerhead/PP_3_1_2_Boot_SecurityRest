@@ -10,6 +10,9 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -35,6 +38,8 @@ public class AdminController {
     @GetMapping(value = "/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
+        List<Role> roles = roleService.getAllRoles();
+        model.addAttribute("roles", roles);
         return "newUser";
     }
 
@@ -47,11 +52,13 @@ public class AdminController {
     @GetMapping(value = "/edit")
     public String edit(@RequestParam(value = "id") long id, Model model) {
         model.addAttribute("user", userService.getOne(id));
+        List<Role> roles = roleService.getAllRoles();
+        model.addAttribute("roles", roles);
         return "editUser";
     }
 
     @PostMapping(value = "/update")
-    public String update(@ModelAttribute("user") User user, @RequestParam("id") Long id) {
+    public String update(@ModelAttribute("user") User user, @RequestParam("id") Long id, Model model) {
         userService.updateUser(id, user);
         return "redirect:/admin";
     }
