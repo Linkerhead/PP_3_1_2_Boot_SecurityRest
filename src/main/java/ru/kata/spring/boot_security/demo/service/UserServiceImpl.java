@@ -49,14 +49,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User createUser(User user, Set<Role> roles) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (roles != null && !roles.isEmpty()) {
-            return user;
-        } else {
-            for (Role role : roles) {
-                user.setRoles(Arrays.asList(role));
-            }
-        }
-        return user;
+        User savedUser = new User();
+        savedUser.setUsername(user.getUsername());
+        savedUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        savedUser.setAge(user.getAge());
+        savedUser.getRoles().addAll(roles);
+        return userRepository.save(savedUser);
+
     }
 
 
@@ -89,4 +88,15 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+
+    @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            User user = userRepository.findByUsername(username);
+            if (user == null) {
+                throw new UsernameNotFoundException("User not found");
+            }
+            user.getAuthorities().size();
+            return user;
+        }
 }
