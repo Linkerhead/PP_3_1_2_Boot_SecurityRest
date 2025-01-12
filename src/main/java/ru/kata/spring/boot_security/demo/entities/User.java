@@ -20,10 +20,12 @@ public class User implements UserDetails {
 
     private String password;
 
-    @Column(unique = true, nullable = false)
+    private int age;
+
+    @Column(unique = true)
     private String email;
 
-    private int age;
+
 
 
 

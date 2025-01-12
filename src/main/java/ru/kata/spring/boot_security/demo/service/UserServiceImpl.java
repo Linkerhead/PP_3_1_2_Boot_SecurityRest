@@ -13,17 +13,15 @@ import ru.kata.spring.boot_security.demo.entities.Role;
 import ru.kata.spring.boot_security.demo.entities.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private  final UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Autowired
@@ -33,6 +31,18 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user.get();
+    }
 
     @Override
     public List<User> findAllUsers() {
@@ -47,41 +57,39 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User createUser(User user, Set<Role> roles) {
+    public User createUser(User user, List<Role> roles) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User savedUser = new User();
-        savedUser.setUsername(user.getUsername());
-        savedUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        savedUser.setAge(user.getAge());
-        savedUser.getRoles().addAll(roles);
-        return userRepository.save(savedUser);
-
+        user.setRoles(roles);
+        userRepository.save(user);
+        return user;
     }
 
 
-    @Override
-    public User getOne(long id) {
-        return userRepository.findById(id).orElse(null);
-    }
 
     @Override
     public User oneUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userService = (UserDetails) authentication.getPrincipal();
         return (User) authentication.getPrincipal();
     }
 
     @Override
     @Transactional
-    public void updateUser(Long id, User user) {
+    public void updateUser(Long id, User user, String password, List<Role> roles) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User  not found"));
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        if (password != null && !password.isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(password));
         }
         existingUser.setUsername(user.getUsername());
+        existingUser.setAge(user.getAge());
+        existingUser.setEmail(user.getEmail());
+        if (roles != null) {
+            existingUser.setRoles(roles);
+        }
         userRepository.save(existingUser);
     }
+
 
     @Override
     @Transactional
@@ -90,13 +98,15 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            User user = userRepository.findByUsername(username);
-            if (user == null) {
-                throw new UsernameNotFoundException("User not found");
-            }
-            user.getAuthorities().size();
-            return user;
-        }
+
 }
+
+
+
+
+
+
+
+
+
+
