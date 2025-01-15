@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.*;
 
+
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
@@ -25,16 +26,11 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
 
-
-
-
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
-
 
 
     public User() {

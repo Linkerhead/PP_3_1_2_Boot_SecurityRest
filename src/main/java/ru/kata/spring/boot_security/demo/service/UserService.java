@@ -9,13 +9,14 @@ import ru.kata.spring.boot_security.demo.entities.User;
 import java.util.List;
 
 
-public interface UserService  extends UserDetailsService {
+public interface UserService extends UserDetailsService {
     List<User> findAllUsers();
 
     void saveUser(User user);
 
     User createUser(User user, List<Role> roles);
 
+    User findUserById(Long id);
 
     User oneUserInfo();
 
@@ -23,5 +24,4 @@ public interface UserService  extends UserDetailsService {
 
     void deleteUser(Long id);
 
-    User findByUsername(String username);
 }

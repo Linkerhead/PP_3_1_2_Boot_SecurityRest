@@ -19,7 +19,7 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -64,6 +64,10 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
+    public User findUserById(Long id) {
+        return userRepository.findUserById(id);
+    }
 
 
     @Override
@@ -71,6 +75,7 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();
     }
+
 
     @Override
     @Transactional
@@ -96,7 +101,6 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-
 
 
 }
